@@ -5,8 +5,12 @@
   "author": "Bruno Rodrigues (Fzn)",
   "license": "MIT",
   "private": false,
+  "scripts": {
+    "dev": "ts-node-dev ./src/index.ts"
+  },
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "http-status-codes": "^2.3.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
