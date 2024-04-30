@@ -3,9 +3,11 @@ import { CidadesController } from "../controllers";
 
 const router = Router();
 
-router.get('/', (_, res) => {
-    return res.status(200).send('Olá, DEV!');
-})
+router.get('/api', (req, res) => {
+    return res.status(200).send({
+        status: 'OK',
+    })
+});
 
 router.post('/cidades', CidadesController.create);
 router.get('/cidades', CidadesController.getAll);
