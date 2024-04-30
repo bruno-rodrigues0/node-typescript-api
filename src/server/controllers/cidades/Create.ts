@@ -15,21 +15,18 @@ export const create = async (req: Request<{}, {}, ICidade>, res: Response) => {
     let validatedData: ICidade | undefined = undefined;
 
     try {
-        
+
         validatedData = await bodyValidation.validate(req.body);
 
     } catch (error){
         const yupError = error as yup.ValidationError;
 
-        return res.json({
+        return res.status(StatusCodes.BAD_REQUEST).json({
             erros: {
                 default: yupError.message,
             }
         })
     }
 
-    console.log(validatedData);
-
-
-    return res.send('Created!');
+    res.status(StatusCodes.CREATED).json(validatedData);
 };
