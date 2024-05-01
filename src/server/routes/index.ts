@@ -9,7 +9,7 @@ router.get('/api', (req, res) => {
     })
 });
 
-router.post('/cidades', CidadesController.create);
+router.post('/cidades', CidadesController.createValidator, CidadesController.create);
 router.get('/cidades', CidadesController.getAll);
 
 export { router };
