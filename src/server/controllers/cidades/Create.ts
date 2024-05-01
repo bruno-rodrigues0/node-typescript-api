@@ -4,6 +4,7 @@ import * as yup from 'yup';
 
 interface ICidade {
     nome: string,
+    estado: string
 }
 
 const bodyValidation: yup.Schema<ICidade> = yup.object().shape({
