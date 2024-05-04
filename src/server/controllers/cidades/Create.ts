@@ -1,17 +1,16 @@
-import { Response, Request } from 'express';
-import { StatusCodes } from 'http-status-codes';
-import { validation } from '../../shared/middleware';
-import * as yup from 'yup';
-
-let value = 0
+import { Response, Request, response } from "express";
+import { StatusCodes } from "http-status-codes";
+import { validation } from "../../shared/middleware";
+import * as yup from "yup";
+import { pool as mysql } from "../../database";
 
 interface ICidade {
-  nome: string,
-  estado: string
+  nome: string;
+  estado: string;
 }
 
 interface IFilter {
-  filter?: string,
+  filter?: string;
 }
 
 export const createValidator = validation((getSchema) => ({
@@ -26,9 +25,36 @@ export const createValidator = validation((getSchema) => ({
     yup.object().shape({
       filter: yup.string().min(3),
     })
-  )
+  ),
 }));
 
-export const create = async (req: Request<unknown, unknown, ICidade>, res: Response) => {
-  res.status(StatusCodes.CREATED).json(req.body);
+export const create = async (
+  req: Request<unknown, unknown, ICidade>,
+  res: Response
+) => {
+  mysql.getConnection((error, conn) => {
+    if (error) {
+      res.status(StatusCodes.FAILED_DEPENDENCY).send({
+        error: error,
+      });
+    }
+
+    conn.query(
+      `INSERT INTO cidade (nome, estado) VALUES (?, ?)`,
+      [req.body.nome, req.body.estado],
+      (error, result, filed) => {
+        conn.release();
+        if (error) {
+          res.status(StatusCodes.BAD_GATEWAY).send({
+            error: error,
+            response: null,
+          });
+        }
+        res.status(StatusCodes.CREATED).send({
+          status: "CREATED",
+          body: result,
+        });
+      }
+    );
+  });
 };
